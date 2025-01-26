@@ -10,4 +10,7 @@ public class SysColumn
     public string data_type { get; set; }
 
     public string table_name { get; set; }
+
+    public string table_schema { get; set; }
+
 }

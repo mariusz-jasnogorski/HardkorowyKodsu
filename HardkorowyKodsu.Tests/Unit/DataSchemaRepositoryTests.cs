@@ -23,8 +23,8 @@ namespace HardkorowyKodsu.Tests.Unit
             string objectName = "TestTable";
             var columnsStub = new List<SysColumn>
             {
-                new SysColumn { ordinal_position = 1, column_name = "Id", data_type = "int", table_name = objectName },
-                new SysColumn { ordinal_position = 2, column_name = "Name", data_type = "nvarchar", table_name = objectName }
+                new SysColumn { ordinal_position = 1, column_name = "Id", data_type = "int", table_name = objectName, table_schema = "dbo" },
+                new SysColumn { ordinal_position = 2, column_name = "Name", data_type = "nvarchar", table_name = objectName, table_schema = "dbo" }
             };
 
             _mockRepo.Setup(r => r.ObjectExistsAsync(objectName)).ReturnsAsync(true);

@@ -23,11 +23,11 @@ namespace HardkorowyKodsu.Tests.Integration
 
             // Dodanie przykładowych danych
             _dbContext.SysObjects.RemoveRange(_dbContext.SysObjects);
-            _dbContext.SysObjects.Add(new SysObject { Id = 1, name = "TestTable", type = "U" });
+            _dbContext.SysObjects.Add(new SysObject { object_id = 1, name = "TestTable", type = "U" });
 
             _dbContext.SysColumns.RemoveRange(_dbContext.SysColumns);
-            _dbContext.SysColumns.Add(new SysColumn { ordinal_position = 1, column_name = "Id", data_type = "int", table_name = "TestTable" });
-            _dbContext.SysColumns.Add(new SysColumn { ordinal_position = 2, column_name = "Name", data_type = "varchar", table_name = "TestTable" });
+            _dbContext.SysColumns.Add(new SysColumn { ordinal_position = 1, column_name = "Id", data_type = "int", table_name = "TestTable", table_schema = "dbo" });
+            _dbContext.SysColumns.Add(new SysColumn { ordinal_position = 2, column_name = "Name", data_type = "varchar", table_name = "TestTable", table_schema = "dbo" });
 
             _dbContext.SaveChanges();
 

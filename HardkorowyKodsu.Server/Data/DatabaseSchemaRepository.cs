@@ -15,17 +15,21 @@ namespace HardkorowyKodsu.Server.Data
 
         public async Task<List<string>> GetDatabaseObjectsAsync()
         {
-            return await _dbContext.SysObjects.Where(o => allowedTypes.Contains(o.type)).Select(o => o.name).ToListAsync();
+            return await _dbContext.SysObjects
+                .Where(o => allowedTypes.Contains(o.type))
+                .Select(o => o.name).ToListAsync();
         }
 
         public async Task<bool> ObjectExistsAsync(string objectName)
         {
-            return await _dbContext.SysObjects.AnyAsync(o => allowedTypes.Contains(o.type) && (o.name == objectName));
+            return await _dbContext.SysObjects
+                .AnyAsync(o => allowedTypes.Contains(o.type) && (o.name == objectName));
         }
 
         public async Task<List<SysColumn>> GetColumnsAsync(string objectName)
         {
-            return await _dbContext.SysColumns.Where(c => c.table_name == objectName).ToListAsync();
+            return await _dbContext.SysColumns
+                .Where(c => c.table_name == objectName && c.table_schema == "dbo").ToListAsync();
         }
     }
 }
