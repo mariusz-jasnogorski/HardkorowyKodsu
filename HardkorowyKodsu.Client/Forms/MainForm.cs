@@ -42,24 +42,54 @@ namespace HardkorowyKodsu.Client
 
         private async Task LoadObjectsAsync()
         {
-            try
+            var objects = await PerformHttpRequestAsync<List<string>>(
+                () => _httpClient.GetAsync("api/databaseschema/objects"),
+                maxRetries: 3, // Ile razy ma próbować
+                delayMilliseconds: 2000 // Przerwa między próbami
+            );
+
+            comboBoxObjects.Items.Clear();
+            if (objects != null)
             {
-                var response = await _httpClient.GetAsync("api/databaseschema/objects");
-                response.EnsureSuccessStatusCode();
-
-                var json = await response.Content.ReadAsStringAsync();
-                var objects = JsonSerializer.Deserialize<List<string>>(json,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                comboBoxObjects.Items.Clear();
-                if (objects != null)
-                {
-                    comboBoxObjects.Items.AddRange(objects.ToArray());
-                }
+                comboBoxObjects.Items.AddRange(objects.ToArray());
             }
-            catch (Exception ex)
+        }
+
+        private async Task<T?> PerformHttpRequestAsync<T>(Func<Task<HttpResponseMessage>> httpAction, int maxRetries = 3, int delayMilliseconds = 2000)
+        {
+            int attempt = 0;
+
+            while (true)
             {
-                MessageBox.Show($"Błąd podczas wczytywania obiektów:\n{ex.Message}");
+                try
+                {
+                    attempt++;
+                    var response = await httpAction.Invoke();
+
+                    response.EnsureSuccessStatusCode(); // Rzuca wyjątek, jeśli kod nie jest 2xx
+
+                    var json = await response.Content.ReadAsStringAsync();
+                    var result = JsonSerializer.Deserialize<T>(json,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    return result;
+                }
+                catch (HttpRequestException ex)
+                {
+                    if (attempt >= maxRetries)
+                    {
+                        MessageBox.Show(
+                            $"Nie można połączyć się z serwerem po {attempt} próbach.\n" +
+                            $"Szczegóły: {ex.Message}",
+                            "Błąd połączenia",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        await Task.Delay(delayMilliseconds);
+                    }
+                }
             }
         }
 

@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Polly" Version="8.5.1" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<!-- plus inne zależności w razie potrzeby -->
 	</ItemGroup>
