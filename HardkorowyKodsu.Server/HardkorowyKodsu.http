@@ -1,0 +1,6 @@
+@HardkorowyKodsu_HostAddress = http://localhost:5163
+
+GET {{HardkorowyKodsu_HostAddress}}/HardkorowyKodsu/
+Accept: application/json
+
+###
